@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"github.com/samithiwat/samithiwat-backend-role/src/config"
 	"github.com/samithiwat/samithiwat-backend-role/src/database"
+	seed "github.com/samithiwat/samithiwat-backend-role/src/database/seeds"
 	"google.golang.org/grpc"
+	"gorm.io/gorm"
 	"log"
 	"net"
 	"os"
@@ -71,6 +74,8 @@ func main() {
 		log.Fatal("Cannot connect to database: ", err.Error())
 	}
 
+	handleArgs(db)
+
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", conf.App.Port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -101,4 +106,20 @@ func main() {
 	})
 
 	<-wait
+}
+
+func handleArgs(db *gorm.DB) {
+	flag.Parse()
+	args := flag.Args()
+
+	if len(args) >= 1 {
+		switch args[0] {
+		case "seed":
+			err := seed.Execute(db, args[1:]...)
+			if err != nil {
+				log.Fatalln("Not found seed")
+			}
+			os.Exit(0)
+		}
+	}
 }
