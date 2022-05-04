@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/samithiwat/samithiwat-backend-role/src/model"
 	"github.com/samithiwat/samithiwat-backend-role/src/proto"
+	"gorm.io/gorm"
 )
 
 var Perm1 model.Permission
@@ -74,24 +75,28 @@ func (r *PermissionMockErrRepo) Delete(_ int, perm *model.Permission) error {
 }
 
 func InitializeMockPermission() (err error) {
-	err = faker.FakeData(&Perm1)
-	if err != nil {
-		panic("Error occur while mocking data")
+	Perm1 = model.Permission{
+		Model: gorm.Model{ID: 1},
+		Name:  faker.Name(),
+		Code:  faker.Word(),
 	}
 
-	err = faker.FakeData(&Perm2)
-	if err != nil {
-		panic("Error occur while mocking data")
+	Perm2 = model.Permission{
+		Model: gorm.Model{ID: 2},
+		Name:  faker.Name(),
+		Code:  faker.Word(),
 	}
 
-	err = faker.FakeData(&Perm3)
-	if err != nil {
-		panic("Error occur while mocking data")
+	Perm3 = model.Permission{
+		Model: gorm.Model{ID: 3},
+		Name:  faker.Name(),
+		Code:  faker.Word(),
 	}
 
-	err = faker.FakeData(&Perm4)
-	if err != nil {
-		panic("Error occur while mocking data")
+	Perm4 = model.Permission{
+		Model: gorm.Model{ID: 4},
+		Name:  faker.Name(),
+		Code:  faker.Word(),
 	}
 
 	CreatePermissionReqMock = proto.CreatePermissionRequest{
