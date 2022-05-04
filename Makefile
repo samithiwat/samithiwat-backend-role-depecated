@@ -12,6 +12,9 @@ proto:
 test:
 	go test ./src/test
 
+seed:
+	go run ./src/. seed
+
 server:
 	go run ./src/.
 
