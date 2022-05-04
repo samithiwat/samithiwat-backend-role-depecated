@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/fecamp-cu/fecamp-2022-user/src/proto"
+	"github.com/samithiwat/samithiwat-backend-role/src/proto"
 	"gorm.io/gorm"
 	"math"
 )

@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/fecamp-cu/fecamp-2022-user/src/model"
-	"github.com/fecamp-cu/fecamp-2022-user/src/proto"
+	"github.com/samithiwat/samithiwat-backend-role/src/model"
+	"github.com/samithiwat/samithiwat-backend-role/src/proto"
 	"net/http"
 )
 
@@ -38,7 +38,7 @@ func (s *PermissionService) FindAll(_ context.Context, req *proto.FindAllPermiss
 			Items: nil,
 			Meta:  &meta,
 		},
-		Error:      errors,
+		Errors:     errors,
 		StatusCode: http.StatusOK,
 	}
 
@@ -66,13 +66,13 @@ func (s *PermissionService) FindOne(_ context.Context, req *proto.FindOnePermiss
 
 	res = &proto.PermissionResponse{
 		Data:       nil,
-		Error:      errors,
+		Errors:     errors,
 		StatusCode: http.StatusOK,
 	}
 
 	err = s.repository.FindOne(int(req.Id), &perm)
 	if err != nil {
-		res.Error = append(errors, err.Error())
+		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
 		return
 	}
@@ -88,13 +88,13 @@ func (s *PermissionService) Create(_ context.Context, req *proto.CreatePermissio
 
 	res = &proto.PermissionResponse{
 		Data:       nil,
-		Error:      errors,
+		Errors:     errors,
 		StatusCode: http.StatusCreated,
 	}
 
 	err = s.repository.Create(perm)
 	if err != nil {
-		res.Error = append(errors, err.Error())
+		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusUnprocessableEntity
 		return
 	}
@@ -111,13 +111,13 @@ func (s *PermissionService) Update(_ context.Context, req *proto.UpdatePermissio
 
 	res = &proto.PermissionResponse{
 		Data:       nil,
-		Error:      errors,
+		Errors:     errors,
 		StatusCode: http.StatusOK,
 	}
 
 	err = s.repository.Update(int(perm.ID), perm)
 	if err != nil {
-		res.Error = append(errors, err.Error())
+		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
 		return
 	}
@@ -134,13 +134,13 @@ func (s *PermissionService) Delete(_ context.Context, req *proto.DeletePermissio
 
 	res = &proto.PermissionResponse{
 		Data:       nil,
-		Error:      errors,
+		Errors:     errors,
 		StatusCode: http.StatusOK,
 	}
 
 	err = s.repository.Delete(int(req.Id), &perm)
 	if err != nil {
-		res.Error = append(errors, err.Error())
+		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
 		return
 	}
