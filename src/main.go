@@ -7,6 +7,9 @@ import (
 	"github.com/samithiwat/samithiwat-backend-role/src/config"
 	"github.com/samithiwat/samithiwat-backend-role/src/database"
 	seed "github.com/samithiwat/samithiwat-backend-role/src/database/seeds"
+	"github.com/samithiwat/samithiwat-backend-role/src/proto"
+	"github.com/samithiwat/samithiwat-backend-role/src/repository"
+	"github.com/samithiwat/samithiwat-backend-role/src/service"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"
 	"log"
@@ -81,7 +84,16 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
+	permRepo := repository.NewPermissionRepository(*db)
+	permServ := service.NewPermissionService(permRepo)
+
+	roleRepo := repository.NewRoleRepository(*db)
+	roleServ := service.NewRoleService(roleRepo)
+
 	grpcServer := grpc.NewServer()
+
+	proto.RegisterPermissionServiceServer(grpcServer, permServ)
+	proto.RegisterRoleServiceServer(grpcServer, roleServ)
 
 	go func() {
 		fmt.Println(fmt.Sprintf("samithiwat user service starting at port %v", conf.App.Port))
