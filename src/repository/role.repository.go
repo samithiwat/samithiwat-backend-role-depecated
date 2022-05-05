@@ -8,10 +8,10 @@ import (
 )
 
 type RoleRepository struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
-func NewRoleRepository(db gorm.DB) *RoleRepository {
+func NewRoleRepository(db *gorm.DB) *RoleRepository {
 	return &RoleRepository{db: db}
 }
 

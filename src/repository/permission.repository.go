@@ -8,10 +8,10 @@ import (
 )
 
 type PermissionRepository struct {
-	db gorm.DB
+	db *gorm.DB
 }
 
-func NewPermissionRepository(db gorm.DB) *PermissionRepository {
+func NewPermissionRepository(db *gorm.DB) *PermissionRepository {
 	return &PermissionRepository{db: db}
 }
 

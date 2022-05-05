@@ -84,10 +84,10 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	permRepo := repository.NewPermissionRepository(*db)
+	permRepo := repository.NewPermissionRepository(db)
 	permServ := service.NewPermissionService(permRepo)
 
-	roleRepo := repository.NewRoleRepository(*db)
+	roleRepo := repository.NewRoleRepository(db)
 	roleServ := service.NewRoleService(roleRepo)
 
 	grpcServer := grpc.NewServer()
