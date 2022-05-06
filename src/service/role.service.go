@@ -23,7 +23,7 @@ func NewRoleService(repository RoleRepository) *RoleService {
 	return &RoleService{repository: repository}
 }
 
-func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) (res *proto.RoleListResponse, err error) {
+func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) (res *proto.RolePaginationResponse, err error) {
 	meta := proto.PaginationMetadata{
 		ItemsPerPage: req.Limit,
 		CurrentPage:  req.Page,
@@ -32,7 +32,7 @@ func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) 
 	var roles []*model.Role
 	var errors []string
 
-	res = &proto.RoleListResponse{
+	res = &proto.RolePaginationResponse{
 		Data: &proto.RolePagination{
 			Items: nil,
 			Meta:  &meta,

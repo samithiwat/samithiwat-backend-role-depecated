@@ -22,7 +22,7 @@ func TestFindAllRole(t *testing.T) {
 
 	var errors []string
 
-	want := &proto.RoleListResponse{
+	want := &proto.RolePaginationResponse{
 		Data: &proto.RolePagination{
 			Items: result,
 			Meta: &proto.PaginationMetadata{
