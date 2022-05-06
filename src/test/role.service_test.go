@@ -22,7 +22,7 @@ func TestFindAllRole(t *testing.T) {
 
 	var errors []string
 
-	want := &proto.RoleListResponse{
+	want := &proto.RolePaginationResponse{
 		Data: &proto.RolePagination{
 			Items: result,
 			Meta: &proto.PaginationMetadata{
@@ -84,6 +84,32 @@ func TestFindOneErrNotFoundRole(t *testing.T) {
 	roleRes, err := roleService.FindOne(mock.Context{}, &proto.FindOneRoleRequest{Id: 1})
 
 	assert.True(err != nil, "Must got an error")
+	assert.Equal(want, roleRes)
+}
+
+func TestFindMultiRole(t *testing.T) {
+	mock.InitializeMockRole()
+
+	var result []*proto.Role
+	for _, role := range mock.Roles {
+		result = append(result, RawToDtoRole(role))
+	}
+
+	var errors []string
+
+	assert := assert.New(t)
+	want := &proto.RoleListResponse{
+		Data:       result,
+		Errors:     errors,
+		StatusCode: http.StatusOK,
+	}
+
+	roleService := service.NewRoleService(&mock.RoleMockRepo{})
+	roleRes, err := roleService.FindMulti(mock.Context{}, &proto.FindMultiRoleRequest{Ids: []uint32{1, 2, 3, 4, 5}})
+	if err != nil {
+		t.Errorf("Got an error")
+	}
+
 	assert.Equal(want, roleRes)
 }
 

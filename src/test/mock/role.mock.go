@@ -35,6 +35,11 @@ func (r *RoleMockRepo) FindOne(_ int, role *model.Role) error {
 	return nil
 }
 
+func (r *RoleMockRepo) FindMulti(_ []uint32, roles *[]*model.Role) error {
+	*roles = Roles
+	return nil
+}
+
 func (r *RoleMockRepo) Create(role *model.Role) error {
 	*role = Role1
 	return nil
@@ -59,6 +64,10 @@ func (r *RoleMockErrRepo) FindAll(*proto.PaginationMetadata, *[]*model.Role) err
 
 func (r *RoleMockErrRepo) FindOne(int, *model.Role) error {
 	return errors.New("Not found role")
+}
+
+func (r *RoleMockErrRepo) FindMulti([]uint32, *[]*model.Role) error {
+	return nil
 }
 
 func (r *RoleMockErrRepo) Create(*model.Role) error {

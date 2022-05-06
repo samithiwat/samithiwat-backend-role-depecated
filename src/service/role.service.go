@@ -14,6 +14,7 @@ type RoleService struct {
 type RoleRepository interface {
 	FindAll(*proto.PaginationMetadata, *[]*model.Role) error
 	FindOne(int, *model.Role) error
+	FindMulti([]uint32, *[]*model.Role) error
 	Create(*model.Role) error
 	Update(int, *model.Role) error
 	Delete(int, *model.Role) error
@@ -23,7 +24,7 @@ func NewRoleService(repository RoleRepository) *RoleService {
 	return &RoleService{repository: repository}
 }
 
-func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) (res *proto.RoleListResponse, err error) {
+func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) (res *proto.RolePaginationResponse, err error) {
 	meta := proto.PaginationMetadata{
 		ItemsPerPage: req.Limit,
 		CurrentPage:  req.Page,
@@ -32,7 +33,7 @@ func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) 
 	var roles []*model.Role
 	var errors []string
 
-	res = &proto.RoleListResponse{
+	res = &proto.RolePaginationResponse{
 		Data: &proto.RolePagination{
 			Items: nil,
 			Meta:  &meta,
@@ -77,6 +78,33 @@ func (s *RoleService) FindOne(_ context.Context, req *proto.FindOneRoleRequest) 
 	}
 
 	result := RawToDtoRole(&role)
+	res.Data = result
+
+	return
+}
+
+func (s *RoleService) FindMulti(_ context.Context, req *proto.FindMultiRoleRequest) (res *proto.RoleListResponse, err error) {
+	var roles []*model.Role
+	var errors []string
+
+	res = &proto.RoleListResponse{
+		Data:       nil,
+		Errors:     errors,
+		StatusCode: http.StatusOK,
+	}
+
+	err = s.repository.FindMulti(req.Ids, &roles)
+	if err != nil {
+		res.Errors = append(errors, err.Error())
+		res.StatusCode = http.StatusNotFound
+		return
+	}
+
+	var result []*proto.Role
+	for _, role := range roles {
+		result = append(result, RawToDtoRole(role))
+	}
+
 	res.Data = result
 
 	return
