@@ -13,7 +13,7 @@ enum LogType{
 }
 
 message User{
-  int32 id = 1;
+  uint32 id = 1;
   string firstname = 2;
   string lastname = 3;
   string imageUrl = 5;
@@ -52,8 +52,9 @@ message Organization{
 }
 
 message Team {
-  string name = 1;
-  string description = 2;
+  uint32 id = 1;
+  string name = 2;
+  string description = 3;
   repeated User members = 4;
   repeated Team subTeams = 5;
   repeated Log logs = 6;
