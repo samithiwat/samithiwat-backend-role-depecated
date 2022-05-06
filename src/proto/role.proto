@@ -8,7 +8,7 @@ import "common.proto";
 option go_package = "github.com/samithiwat/samithiwat-backend-user/src/proto";
 
 service RoleService {
-  rpc FindAll(FindAllRoleRequest) returns (RolePaginateResponse){}
+  rpc FindAll(FindAllRoleRequest) returns (RolePaginationResponse){}
   rpc FindOne(FindOneRoleRequest) returns (RoleResponse){}
   rpc FindMulti(FindMultiRoleRequest) returns (RoleListResponse){}
   rpc Create(CreateRoleRequest) returns (RoleResponse){}
@@ -33,7 +33,7 @@ message RolePagination{
   common.PaginationMetadata meta = 2;
 }
 
-message RolePaginateResponse{
+message RolePaginationResponse{
   int32 StatusCode = 1;
   repeated string errors = 2;
   RolePagination data = 3;
