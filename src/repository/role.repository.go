@@ -23,6 +23,10 @@ func (r *RoleRepository) FindOne(id int, role *model.Role) error {
 	return r.db.Preload(clause.Associations).First(&role, id).Error
 }
 
+func (r *RoleRepository) FindMulti(ids []uint32, roles *[]*model.Role) error {
+	return r.db.Where("id IN ?", ids).Find(&roles).Error
+}
+
 func (r *RoleRepository) Create(role *model.Role) error {
 	return r.db.Create(&role).Error
 }
