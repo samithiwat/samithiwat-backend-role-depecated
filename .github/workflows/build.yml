@@ -1,8 +1,10 @@
 name: Build and Deploy
 
 on:
+  workflow_dispatch:
   push:
     branches:
+      - dev
       - master
 
 jobs:
@@ -23,6 +25,7 @@ jobs:
 
       - name: Set image name with branch
         run: |
+          echo "BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
           echo "IMAGE_NAME=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
 
       - name: Log in to the Container Registry
@@ -37,6 +40,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_NAME }}:release
+          tags: ${{ env.IMAGE_NAME }}:${{ env.BRANCH }}
           cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max
