@@ -2,7 +2,6 @@ package repository
 
 import (
 	"github.com/samithiwat/samithiwat-backend-role/src/model"
-	"github.com/samithiwat/samithiwat-backend-role/src/proto"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -15,8 +14,8 @@ func NewRoleRepository(db *gorm.DB) *RoleRepository {
 	return &RoleRepository{db: db}
 }
 
-func (r *RoleRepository) FindAll(meta *proto.PaginationMetadata, roles *[]*model.Role) error {
-	return r.db.Scopes(Pagination(roles, meta)).Find(&roles).Count(&meta.ItemCount).Error
+func (r *RoleRepository) FindAll(pagination *model.RolePagination) error {
+	return r.db.Scopes(Pagination(&pagination.Items, &pagination.Meta, r.db)).Find(&pagination.Items).Count(&pagination.Meta.ItemCount).Error
 }
 
 func (r *RoleRepository) FindOne(id int, role *model.Role) error {

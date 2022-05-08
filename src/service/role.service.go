@@ -12,7 +12,7 @@ type RoleService struct {
 }
 
 type RoleRepository interface {
-	FindAll(*proto.PaginationMetadata, *[]*model.Role) error
+	FindAll(*model.RolePagination) error
 	FindOne(int, *model.Role) error
 	FindMulti([]uint32, *[]*model.Role) error
 	Create(*model.Role) error
@@ -25,24 +25,27 @@ func NewRoleService(repository RoleRepository) *RoleService {
 }
 
 func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) (res *proto.RolePaginationResponse, err error) {
-	meta := proto.PaginationMetadata{
-		ItemsPerPage: req.Limit,
-		CurrentPage:  req.Page,
-	}
-
 	var roles []*model.Role
 	var errors []string
+
+	query := model.RolePagination{
+		Items: &roles,
+		Meta: model.PaginationMetadata{
+			ItemsPerPage: req.Limit,
+			CurrentPage:  req.Page,
+		},
+	}
 
 	res = &proto.RolePaginationResponse{
 		Data: &proto.RolePagination{
 			Items: nil,
-			Meta:  &meta,
+			Meta:  nil,
 		},
 		Errors:     errors,
 		StatusCode: http.StatusOK,
 	}
 
-	err = s.repository.FindAll(&meta, &roles)
+	err = s.repository.FindAll(&query)
 	if err != nil {
 		errors = append(errors, err.Error())
 		res.StatusCode = http.StatusBadRequest
@@ -51,11 +54,18 @@ func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) 
 
 	var result []*proto.Role
 
-	for _, role := range roles {
+	for _, role := range *query.Items {
 		result = append(result, RawToDtoRole(role))
 	}
 
 	res.Data.Items = result
+	res.Data.Meta = &proto.PaginationMetadata{
+		TotalItem:    query.Meta.TotalItem,
+		ItemCount:    query.Meta.ItemCount,
+		ItemsPerPage: query.Meta.ItemsPerPage,
+		TotalPage:    query.Meta.TotalPage,
+		CurrentPage:  query.Meta.CurrentPage,
+	}
 
 	return
 }

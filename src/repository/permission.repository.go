@@ -2,7 +2,6 @@ package repository
 
 import (
 	"github.com/samithiwat/samithiwat-backend-role/src/model"
-	"github.com/samithiwat/samithiwat-backend-role/src/proto"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -15,8 +14,8 @@ func NewPermissionRepository(db *gorm.DB) *PermissionRepository {
 	return &PermissionRepository{db: db}
 }
 
-func (r *PermissionRepository) FindAll(meta *proto.PaginationMetadata, perms *[]*model.Permission) error {
-	return r.db.Scopes(Pagination(perms, meta)).Find(&perms).Count(&meta.ItemCount).Error
+func (r *PermissionRepository) FindAll(pagination *model.PermissionPagination) error {
+	return r.db.Scopes(Pagination(&pagination.Items, &pagination.Meta, r.db)).Find(&pagination.Items).Count(&pagination.Meta.ItemCount).Error
 }
 
 func (r *PermissionRepository) FindOne(id int, perm *model.Permission) error {

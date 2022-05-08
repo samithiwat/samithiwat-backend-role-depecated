@@ -18,15 +18,14 @@ var UpdateRoleReqMock proto.UpdateRoleRequest
 type RoleMockRepo struct {
 }
 
-func (r *RoleMockRepo) FindAll(meta *proto.PaginationMetadata, roles *[]*model.Role) error {
-	meta.CurrentPage = 1
-	meta.TotalPage = 1
-	meta.ItemCount = 4
-	meta.TotalItem = 4
-	meta.ItemsPerPage = 10
+func (*RoleMockRepo) FindAll(pagination *model.RolePagination) error {
+	pagination.Meta.CurrentPage = 1
+	pagination.Meta.TotalPage = 1
+	pagination.Meta.ItemCount = 4
+	pagination.Meta.TotalItem = 4
+	pagination.Meta.ItemsPerPage = 10
 
-	*roles = Roles
-
+	*pagination.Items = Roles
 	return nil
 }
 
@@ -58,7 +57,7 @@ func (r *RoleMockRepo) Delete(_ int, role *model.Role) error {
 type RoleMockErrRepo struct {
 }
 
-func (r *RoleMockErrRepo) FindAll(*proto.PaginationMetadata, *[]*model.Role) error {
+func (r *RoleMockErrRepo) FindAll(pagination *model.RolePagination) error {
 	return nil
 }
 

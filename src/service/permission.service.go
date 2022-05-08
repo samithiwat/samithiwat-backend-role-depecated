@@ -12,7 +12,7 @@ type PermissionService struct {
 }
 
 type PermissionRepository interface {
-	FindAll(*proto.PaginationMetadata, *[]*model.Permission) error
+	FindAll(*model.PermissionPagination) error
 	FindOne(int, *model.Permission) error
 	Create(*model.Permission) error
 	Update(int, *model.Permission) error
@@ -24,25 +24,27 @@ func NewPermissionService(repository PermissionRepository) *PermissionService {
 }
 
 func (s *PermissionService) FindAll(_ context.Context, req *proto.FindAllPermissionRequest) (res *proto.PermissionListResponse, err error) {
-
-	meta := proto.PaginationMetadata{
-		ItemsPerPage: req.Limit,
-		CurrentPage:  req.Page,
-	}
-
-	var perms []*model.Permission
+	var roles []*model.Permission
 	var errors []string
+
+	query := model.PermissionPagination{
+		Items: &roles,
+		Meta: model.PaginationMetadata{
+			ItemsPerPage: req.Limit,
+			CurrentPage:  req.Page,
+		},
+	}
 
 	res = &proto.PermissionListResponse{
 		Data: &proto.PermissionPagination{
 			Items: nil,
-			Meta:  &meta,
+			Meta:  nil,
 		},
 		Errors:     errors,
 		StatusCode: http.StatusOK,
 	}
 
-	err = s.repository.FindAll(&meta, &perms)
+	err = s.repository.FindAll(&query)
 	if err != nil {
 		errors = append(errors, err.Error())
 		res.StatusCode = http.StatusBadRequest
@@ -51,11 +53,18 @@ func (s *PermissionService) FindAll(_ context.Context, req *proto.FindAllPermiss
 
 	var result []*proto.Permission
 
-	for _, perm := range perms {
+	for _, perm := range *query.Items {
 		result = append(result, RawToDtoPermission(perm))
 	}
 
 	res.Data.Items = result
+	res.Data.Meta = &proto.PaginationMetadata{
+		TotalItem:    query.Meta.TotalItem,
+		ItemCount:    query.Meta.ItemCount,
+		ItemsPerPage: query.Meta.ItemsPerPage,
+		TotalPage:    query.Meta.TotalPage,
+		CurrentPage:  query.Meta.CurrentPage,
+	}
 
 	return
 }
