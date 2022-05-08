@@ -15,7 +15,7 @@ func NewPermissionRepository(db *gorm.DB) *PermissionRepository {
 }
 
 func (r *PermissionRepository) FindAll(pagination *model.PermissionPagination) error {
-	return r.db.Scopes(Pagination(&pagination.Items, &pagination.Meta, r.db)).Find(&pagination.Items).Count(&pagination.Meta.ItemCount).Error
+	return r.db.Scopes(Pagination(&pagination.Items, &pagination.Meta, r.db)).Find(&pagination.Items).Error
 }
 
 func (r *PermissionRepository) FindOne(id int, perm *model.Permission) error {
