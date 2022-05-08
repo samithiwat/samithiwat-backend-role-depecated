@@ -19,15 +19,14 @@ var UpdatePermissionReqMock proto.UpdatePermissionRequest
 type PermissionMockRepo struct {
 }
 
-func (r *PermissionMockRepo) FindAll(meta *proto.PaginationMetadata, perms *[]*model.Permission) error {
-	meta.CurrentPage = 1
-	meta.TotalPage = 1
-	meta.ItemCount = 4
-	meta.TotalItem = 4
-	meta.ItemsPerPage = 10
+func (r *PermissionMockRepo) FindAll(pagination *model.PermissionPagination) error {
+	pagination.Meta.CurrentPage = 1
+	pagination.Meta.TotalPage = 1
+	pagination.Meta.ItemCount = 4
+	pagination.Meta.TotalItem = 4
+	pagination.Meta.ItemsPerPage = 10
 
-	*perms = Perms
-
+	*pagination.Items = Perms
 	return nil
 }
 
@@ -54,7 +53,7 @@ func (r *PermissionMockRepo) Delete(_ int, perm *model.Permission) error {
 type PermissionMockErrRepo struct {
 }
 
-func (r *PermissionMockErrRepo) FindAll(*proto.PaginationMetadata, *[]*model.Permission) error {
+func (r *PermissionMockErrRepo) FindAll(*model.PermissionPagination) error {
 	return nil
 }
 
