@@ -8,3 +8,8 @@ type Permission struct {
 	Code  string  `json:"code" gorm:"index:,unique"`
 	Roles []*Role `json:"roles" gorm:"many2many:role_permission"`
 }
+
+type PermissionPagination struct {
+	Items *[]*Permission
+	Meta  PaginationMetadata
+}

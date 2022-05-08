@@ -10,3 +10,8 @@ type Role struct {
 	Description string        `json:"description"`
 	Permissions []*Permission `json:"permissions" gorm:"many2many:role_permission"`
 }
+
+type RolePagination struct {
+	Items *[]*Role
+	Meta  PaginationMetadata
+}
