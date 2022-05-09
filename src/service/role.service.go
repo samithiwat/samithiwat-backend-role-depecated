@@ -49,7 +49,7 @@ func (s *RoleService) FindAll(_ context.Context, req *proto.FindAllRoleRequest) 
 	if err != nil {
 		errors = append(errors, err.Error())
 		res.StatusCode = http.StatusBadRequest
-		return
+		return res, nil
 	}
 
 	var result []*proto.Role
@@ -84,7 +84,7 @@ func (s *RoleService) FindOne(_ context.Context, req *proto.FindOneRoleRequest) 
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
-		return
+		return res, nil
 	}
 
 	result := RawToDtoRole(&role)
@@ -107,7 +107,7 @@ func (s *RoleService) FindMulti(_ context.Context, req *proto.FindMultiRoleReque
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
-		return
+		return res, nil
 	}
 
 	var result []*proto.Role
@@ -134,7 +134,7 @@ func (s *RoleService) Create(_ context.Context, req *proto.CreateRoleRequest) (r
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusUnprocessableEntity
-		return
+		return res, nil
 	}
 
 	result := RawToDtoRole(role)
@@ -157,7 +157,7 @@ func (s *RoleService) Update(_ context.Context, req *proto.UpdateRoleRequest) (r
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
-		return
+		return res, nil
 	}
 
 	result := RawToDtoRole(role)
@@ -180,7 +180,7 @@ func (s *RoleService) Delete(_ context.Context, req *proto.DeleteRoleRequest) (r
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
-		return
+		return res, nil
 	}
 
 	result := RawToDtoRole(&role)

@@ -48,7 +48,7 @@ func (s *PermissionService) FindAll(_ context.Context, req *proto.FindAllPermiss
 	if err != nil {
 		errors = append(errors, err.Error())
 		res.StatusCode = http.StatusBadRequest
-		return
+		return res, nil
 	}
 
 	var result []*proto.Permission
@@ -83,7 +83,7 @@ func (s *PermissionService) FindOne(_ context.Context, req *proto.FindOnePermiss
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
-		return
+		return res, nil
 	}
 
 	result := RawToDtoPermission(&perm)
@@ -105,7 +105,7 @@ func (s *PermissionService) Create(_ context.Context, req *proto.CreatePermissio
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusUnprocessableEntity
-		return
+		return res, nil
 	}
 
 	result := RawToDtoPermission(perm)
@@ -128,7 +128,7 @@ func (s *PermissionService) Update(_ context.Context, req *proto.UpdatePermissio
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
-		return
+		return res, nil
 	}
 
 	result := RawToDtoPermission(perm)
@@ -151,7 +151,7 @@ func (s *PermissionService) Delete(_ context.Context, req *proto.DeletePermissio
 	if err != nil {
 		res.Errors = append(errors, err.Error())
 		res.StatusCode = http.StatusNotFound
-		return
+		return res, nil
 	}
 
 	result := RawToDtoPermission(&perm)
