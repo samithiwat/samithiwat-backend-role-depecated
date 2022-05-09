@@ -96,7 +96,7 @@ func main() {
 	proto.RegisterRoleServiceServer(grpcServer, roleServ)
 
 	go func() {
-		fmt.Println(fmt.Sprintf("samithiwat user service starting at port %v", conf.App.Port))
+		fmt.Println(fmt.Sprintf("samithiwat role service starting at port %v", conf.App.Port))
 
 		if err = grpcServer.Serve(lis); err != nil {
 			log.Fatalln("Failed to serve:", err)
